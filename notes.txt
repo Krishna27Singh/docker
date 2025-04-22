@@ -4,3 +4,98 @@ What is Docker?
 #you bring up a container (isolated environment) that brings up mongodb nodejs and all the dependencies and starts the project. and you can destroy your container with a single command
 #all of this comes in a single command. and all of this is defined in a docker file
 #There is a single and same command that runs the comtainer in every system and OS
+#we can directly deploy the image to an AWS machine or cloud machine. google cloud machine (GCP)
+#sudo ke sath extra security hoti and hume password btana pdta. sudo mtlb super user do 
+
+
+#DOCKER HAS 3 PARTS:
+1) CLI
+2) ENGINE
+3) REGISTRY(DOCKER HUB)
+
+
+#COMMAND LINE INTERFACE (CLI):
+command line interface mtlb jo hum docker ke sathh interact krte hai terminal pe. this is one way to run docker  
+
+#DOCKER HUB:
+docker hub is very similar to github. you deploy your image to docker hub 
+#The docker image has various things like file system needed, networking and source code, etc.
+#you can deploy your image to AWS and GCP etc.
+#REGISTRY is a place where you can deploy your image. 
+
+
+
+
+
+###IMAGE VS CONTAINERS (POPLULAR INTERVIEW QUESTION)###
+#A docker image behaves like a template through which consistent containers can be created.
+here consistent means weather you are running it on windows mac or linux all the 3 machines will show the same outcome 
+#If docker was a traditional virtual machine (VM) , the image could be like the ISO (Internation Organization for Standardization) file used to install your VM
+#An ISO file (also known as an ISO image) is a single file that represents a complete copy (or image) of the contents of a physical disc, such as a CD, DVD, or Blu-ray. The name "ISO" comes from the ISO 9660 file system used for CD-ROM media, although ISO files can store data in other formats too.
+
+#What is a Hyperviser?
+A hypervisor (also known as a virtual machine monitor, or VMM) is software, firmware, or hardware that creates and manages virtual machines (VMs) on a physical host system. It allows multiple operating systems (OSes) to run simultaneously on a single hardware platform by abstracting and dividing the underlying hardware resources (such as CPU, memory, and storage) among the VMs.
+
+#Image is a thing that you create once but you can create as many containers as possible
+#Image in execution is called a container.
+
+#docker pull mongo -> pulls the mongo image from dockerhub 
+docker run mongo -> runs the image to my machine 
+
+#HOW TO CONTAINERISE AN APP?
+#configuration (This configuration contains inside the docker file)
+****************************
+FROM node:20           1/4-> layer1
+WORKDIR /usr/src/app   2/4-> layer2
+COPY . .               3/4-> layer3
+RUN npm install        4/4-> layer4
+EXPOSE 3000
+CMD ["node", "index.js"]
+****************************
+
+1)FROM node:20. here node:20 is the base image  (an already deployed image on dockerhub)
+2)WORKDIR /usr/src/app this is where i want to pull my code base run my codebase etc 
+3)COPY . .  copy everything from this folder into the docker file
+first dot represent copy everything and second dot represent in which dir to copy 
+2 and 3 copies everything to the working directory 
+4)RUN npm install
+
+we can do npm install inside the old file or copy before copying it and then node modules will also get copied so there is no need for npm install again. but ideally we should not copy node modules and install npm after copying due to a few reason. mainly because some modules that are build on my mac might not build on the linux machine etc thats why
+#one way to make sure that you never copy node modules is that you create a .dockerignore file and put node_modules in it 
+
+5) EXPOSE 3000
+#The container can die down after running the code. 
+#they don't really have to be long running http servers
+#you don't want to give then too much power
+#the machine should not necessarily transfer all the request coming on port 3000 to the container. the container should expose that port and then the machine can decide
+
+6) CMD ["node", "index.js"]
+#what command to run when the container is running 
+#big difference between 1,2,3,4,5 and 6
+#1-5 runs when you are creating the image and 6 run when you're running image or starting the container. 
+#CMD runs when you're actually starting and image and creating the container
+# you can have multiple RUN (4) 
+
+##COMMANDS TO RUN 
+
+# docker build . -t <image_tag> -> this single command will create your image 
+
+#docker images -> shows all the images 
+
+#docker run <image_tag> -> this command will start the container from the image and run everything 
+
+# docker run -m <port1>:<port2> <image_tag>
+the port1 port of the mac machine should forward all request to the port2 of the container that the specific ommand is starting 
+#mac machine does not want any container to start. and it does not transfer any request to port to the container to get routed automatically. it depends on the mac machine 
+
+
+
+
+#to push an image to dockerhub repository. create an image with the given name in the repository and then write command docker push <username/repo_name>. that's it 
+
+https://hub.docker.com/repository/docker/krishna727
+
+
+#caching concept
+#docker build takes a long time running the first time. but afterwards it takes significantly less time as compared to first time because it caches the commands and codebase from the previous time.
+#if i change index.js then copy . . command will not be cached and all the command after that will not be cached 
