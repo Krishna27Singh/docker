@@ -1,0 +1,6 @@
+What is Docker?
+
+#Docker was made alg alg system and OS ke andr alg alg chize like nodejs and mongdo db install krne ka alg process hota. koi project ek system m chal jata but dusre m nahi. isiliye docker ko laya gya
+#you bring up a container (isolated environment) that brings up mongodb nodejs and all the dependencies and starts the project. and you can destroy your container with a single command
+#all of this comes in a single command. and all of this is defined in a docker file
+#There is a single and same command that runs the comtainer in every system and OS
